@@ -5,6 +5,7 @@ from __future__ import division
 
 import datetime,os,time
 
+
 def makeDateString(result,datetimeformat=False):
   if len(result) !=7: 
     return "makeDateString:Error"    
@@ -110,7 +111,7 @@ def calAverage(record,hrmax_ref=175,hrmin_ref=50):
     return hrmoy,hrmax
 
 
-def dataProcess(data,hrmax_ref=180,hrmin_ref=50,filterOut=True,offset=0):
+def dataProcess(data,output_fmt='fitlog',hrmax_ref=180,hrmin_ref=50,filterOut=True,offset=0):
   H1=0xFC
   H2=0xFA
   EOF=0xFF
@@ -162,15 +163,20 @@ def dataProcess(data,hrmax_ref=180,hrmin_ref=50,filterOut=True,offset=0):
     totalLength+=len(record)
     txt="Activity no:%2i at %s [%s], hrmoy=%.1f hrmax=%.0f" % (i,datestr,str(datetime.timedelta(seconds=len(record)*2)),hrmoy,hrmax)
     #print "record[",len(record),"]=",record
-    filename='data/' + datestr + '.hrm'
+    if output_fmt=='hrm':
+      filename='data/' + datestr + '.hrm'
+    else:
+      filename='data/' + datestr + '.fitlog'
     print "filename=%s" % filename
     if not os.path.isfile(filename):
       if not os.path.exists('data'):
         os.mkdir('data')
       #f=open(datestr + '.fitlog','w')
       f=open(filename,'w')
-      #recordstr=recordFitlogFormat(record,makeDateString(date,datetimeformat=True),dtformat="%Y-%m-%dT%H:%M:%SZ")
-      recordstr=recordHrmFormat(record,makeDateString(date,datetimeformat=True))
+      if output_fmt=='hrm':
+        recordstr=recordHrmFormat(record,makeDateString(date,datetimeformat=True))
+      else:
+        recordstr=recordFitlogFormat(record,makeDateString(date,datetimeformat=True),dtformat="%Y-%m-%dT%H:%M:%SZ")
       f.writelines(recordstr)
       f.close()
       txt +=" => saved"

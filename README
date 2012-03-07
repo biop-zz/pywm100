@@ -1,6 +1,7 @@
 PYWM100
 
-pywm100 can retrieve data store on devices from Oregon Scientific or equivalent like Kalenji PC cardio Connect. It has been tested under Linux and based on Python.
+pywm100 can retrieve data store on heart bit rate logger devices from Oregon Scientific or equivalent like Kalenji PC cardio Connect. It has been tested under Linux and based on Python.
+You can output data in fitlog format or hrm format using command line options
 
 LICENSE:
 
@@ -17,6 +18,6 @@ TODO:
 
 KNOWN ISSUES:
 
-
+Does not work if connected through a usb hub
 
 

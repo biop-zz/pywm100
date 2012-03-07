@@ -10,6 +10,7 @@ import time
 import os
 import dataproc
 import datetime
+from optparse import OptionParser
 
 DEVICEID = 0x0fde
 PRODUCTID = 0x0105
@@ -185,6 +186,22 @@ def readData(index,TimeOut=3000,min_index=1,max_index=1019):
   return result,True
   
   
+parser = OptionParser()
+parser.add_option("-f", "--fitlog",
+                  action="store_true", dest="fitlog", default=True,
+                  help="produce fitlog format file (default)")
+parser.add_option("-m", "--hrm",
+                  action="store_true", dest="hrm", default=False,
+                  help="produce hrm format file")
+parser.add_option("-a", "--hrmax", type="int", dest="hrmax",default=180)
+parser.add_option("-b", "--hrmin", type="int", dest="hrmin",default=50)
+parser.add_option("-c", "--filter",
+                  action="store_true", dest="filter", default=False,
+                  help="filter out data:limit to values between hrmin and hrmax")
+
+(options, args) = parser.parse_args()
+print "options:",options
+
 interface=findInterface()
 initInterface(interface)
 #getRemainingHours(interface)
@@ -207,8 +224,12 @@ while i <lastindex:
   
 if lastindex > 0:
   print "Process data ..."
-  dataproc.dataProcess(data,hrmax_ref=180,hrmin_ref=50,filterOut=True,offset=0)
-  #dataproc.dataProcess(data,hrmax_ref=180,hrmin_ref=50,filterOut=True,offset=-7)
+  output_fmt=""
+  if options.hrm:
+    output_fmt='hrm'
+  elif options.fitlog:
+    output_fmt='fitlog'
+  dataproc.dataProcess(data,output_fmt=output_fmt,hrmax_ref=options.hrmax,hrmin_ref=options.hrmin,filterOut=options.filter,offset=0)
 
 try:
   interface.releaseInterface()
