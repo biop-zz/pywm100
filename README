@@ -3,6 +3,12 @@ PYWM100
 pywm100 can retrieve data store on heart bit rate logger devices from Oregon Scientific or equivalent like Kalenji PC cardio Connect. It has been tested under Linux and based on Python.
 You can output data in fitlog format or hrm format using command line options
 
+You need to put both files in a directory, python 2.7, pyusb module. A data directory will be created in the current one to receive output files.
+
+For unprivileged access of usb, you may need following modification (on a fedora 14)
+a file /etc/udev/rules.d/51-wm100.rules, containing
+ATTRS{idVendor}=="0fde", ATTRS{idProduct}=="0105", MODE="666"
+
 LICENSE:
 
 pywm100 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
